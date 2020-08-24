@@ -1,0 +1,78 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <title>'微博'</title>
+    <style>
+        body {
+            width: 1000px;
+            margin: 0 auto;
+            padding: 0;
+        }
+
+        table,
+        td,
+        th {
+            border: 1px solid #000000;
+            border-collapse: collapse;
+        }
+
+        .nav {
+            background-color: gray;
+            height: 100px;
+        }
+
+        .container {
+            background-color: gold;
+            width: 1000px;
+        }
+
+        .content {
+            background-color: #5666ff;
+            width: 800px;
+            height: 500px;
+            float: left;
+        }
+
+        .sidebar {
+            background-color: lawngreen;
+            width: 200px;
+            height: 500px;
+            float: left;
+        }
+
+        .botmbar {
+            clear: both;
+            background-color: gray;
+            height: 40px;
+        }
+    </style>
+</head>
+<body>
+<div>
+    <!-- 导航栏 -->
+    <div class="nav">
+        <a href="/">首页</a>
+        <a href="#">文章列表</a>
+        <a href="/user/register">注册</a>
+    </div>
+
+    <!-- 容器 -->
+    <div class="container">
+        <!-- 内容区 -->
+        <div class="content">
+            {% block content %}当前没有内容{% endblock %}
+        </div>
+        <!-- 边栏 -->
+        <div class="sidebar">
+            {% block sidebar %}边栏没有内容{% endblock %}
+        </div>
+    </div>
+
+    <!-- 底栏 -->
+    <div class="botmbar">
+        版权所有@copyright point 2020
+    </div>
+</div>
+</body>
+</html>
