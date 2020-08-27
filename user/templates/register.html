@@ -1,17 +1,90 @@
 {% extends "base.html" %}
 
-
-<!--   content-->
+<!-- 填充 content -->
 {% block content %}
-<form action="/user/register" method="POST">
-    昵称:<input type="text" name="username">
-    <br>
-    密码:<input type="password" name="password">
-    <br>
-    电话号码:<input type="text" name="phonenum">
-    <br>
-    性别:<input type="text" name="gender">
-    <br>
-    <input type="submit">
+
+<!-- 处理错误信息 -->
+{% if err %}
+<div class="alert alert-danger" role="alert">
+  <p class="mb-0">{{ err }}</p>
+</div>
+{% endif %}
+
+<form action="/user/register" method="POST" enctype="multipart/form-data">
+  <div class="form-group row">
+    <label class="col-sm-2 col-form-label">昵称</label>
+    <div class="col-sm-5">
+      <input type="text" class="form-control" name="nickname" />
+    </div>
+  </div>
+
+  <div class="form-group row">
+    <label class="col-sm-2 col-form-label">密码</label>
+    <div class="col-sm-5">
+      <input type="password" class="form-control" name="password1" />
+    </div>
+  </div>
+
+  <div class="form-group row">
+    <label class="col-sm-2 col-form-label">确认密码</label>
+    <div class="col-sm-5">
+      <input type="password" class="form-control" name="password2" />
+    </div>
+  </div>
+
+  <fieldset class="form-group">
+    <div class="row">
+      <legend class="col-form-label col-sm-2 pt-0">性别</legend>
+      <div class="col-sm-5">
+        <div class="form-check">
+          <input class="form-check-input" type="radio" name="gender" value="male" />
+          <label class="form-check-label">男</label>
+        </div>
+        <div class="form-check">
+          <input class="form-check-input" type="radio" name="gender" value="female" />
+          <label class="form-check-label">女</label>
+        </div>
+        <div class="form-check disabled">
+          <input class="form-check-input" type="radio" name="gender" value="unknow" checked />
+          <label class="form-check-label">保密</label>
+        </div>
+      </div>
+    </div>
+  </fieldset>
+
+  <div class="form-group row">
+    <label class="col-sm-2 col-form-label">生日</label>
+    <div class="col-sm-5">
+      <input type="date" class="form-control" name="birthday" min="1960-01-01" max="2002-12-31" />
+    </div>
+  </div>
+
+  <div class="form-group row">
+    <label class="col-sm-2 col-form-label">城市</label>
+    <div class="col-sm-5">
+      <input type="text" class="form-control" name="city" />
+    </div>
+  </div>
+
+  <div class="form-group row">
+    <label class="col-sm-2 col-form-label">头像</label>
+    <div class="col-sm-5">
+      <input type="file" class="form-control-file" name="avatar" />
+    </div>
+  </div>
+
+  <div class="form-group row">
+    <label class="col-sm-2 col-form-label">简介</label>
+    <div class="col-sm-8">
+      <textarea class="form-control" name="bio" rows="5"></textarea>
+    </div>
+  </div>
+
+  <div class="form-group row">
+    <label class="col-sm-2 col-form-label"></label>
+    <div class="col-sm-5">
+      <button class="btn btn-success">点击注册</button>
+    </div>
+  </div>
 </form>
 {% endblock %}

@@ -1,0 +1,88 @@
+{% extends "base.html" %}
+
+<!-- 填充 content -->
+{% block content %}
+
+    <div class="alert alert-primary" role="alert">
+        <!-- 微博作者 -->
+        <h4 class="alert-heading">
+            <img class="rounded" src="{{ weibo.author.avatar }}" width="35px"/>
+            {{ weibo.author.nickname }}:
+        </h4>
+
+        <!-- 微博内容区 -->
+        <p class="mb-0 offset-1">{{ weibo.content | replace('\n', '<br />') | safe }}</p>
+        <hr/>
+
+        <!-- 微博相关链接 -->
+        <div class="row col justify-content-between">
+            <span class="text-secondary">{{ weibo.created }}</span>
+
+            <span>
+      {% if weibo.uid == session.get('uid') %}
+          <!-- 修改删除按钮 -->
+          <a class="text-info" href="/weibo/edit?wid={{ weibo.id }}">修改</a>
+          &nbsp;
+          <a class="text-danger" href="/weibo/delete?wid={{ weibo.id }}">删除</a>
+          &nbsp;
+          <!---->
+      {% endif %}
+                <a href="/like" class="primary">点赞</a>
+    </span>
+        </div>
+    </div>
+
+    <hr/>
+
+    <!-- 评论区 -->
+    <div class="alert">
+        <form class="row justify-content-end" action="/weibo/post_comment" method="POST">
+            <textarea class="form-control col" name="content" rows="2" placeholder="请输入评论内容"></textarea>
+
+            <input type="hidden" name="wid" value="{{ weibo.id }}"/>
+            &emsp;
+            <button type="submit" class="btn btn-primary">评论</button>
+        </form>
+    </div>
+
+    <!-- 评论展示区 -->
+    {% for cmt in comments %}
+        <hr/>
+        <div class="alert alert-secondary" role="alert">
+            <div class="row justify-content-between align-items-center">
+    <span class="col">
+      {% if cmt.cid == 0 %}
+          <!-- 顶级评论作者信息 -->
+          <strong>{{ cmt.author.nickname }}</strong> 说:
+
+          <!-- 回复相关的作者信息 -->
+      {% else %}
+          <strong>{{ cmt.author.nickname }}</strong> 对 <strong>{{ cmt.upper.author.nickname }}</strong> 说:
+          <!---->
+      {% endif %}
+    </span>
+
+                <form class="form-inline text-right" action="/weibo/reply" method="POST">
+                    <div class="form-group mx-sm-2">
+                        <input class="form-control" type="text" name="content"/>
+                        <input type="hidden" name="wid" value="{{ weibo.id }}"/>
+                        <input type="hidden" name="cid" value="{{ cmt.id }}"/>
+                        <button class="btn btn-primary">回复</button>
+                    </div>
+                </form>
+            </div>
+
+            <p class="col">{{ cmt.content }}</p>
+            <hr/>
+            <div class="text-right">
+                <span class="text-secondary">{{ cmt.created }}</span>
+
+                <!-- 判断是否是自己的评论 -->
+                {% if session.uid == cmt.uid %} &nbsp;
+                    <a class="text-danger" href="/weibo/delete_comment?cid={{ cmt.id }}">删除</a>
+                {% endif %}
+            </div>
+        </div>
+    {% endfor %}
+    <br/>
+{% endblock %}

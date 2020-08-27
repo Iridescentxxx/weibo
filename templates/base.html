@@ -1,78 +1,74 @@
 <!DOCTYPE html>
-<html lang="en">
-<head>
-    <meta charset="UTF-8">
-    <title>'微博'</title>
+<html>
+  <head>
+    <title>迷你微博</title>
+    <meta charset="utf-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1, shrink-to-fit=no" />
+    <link rel="stylesheet" href="/static/css/bootstrap.min.css" />
+
     <style>
-        body {
-            width: 1000px;
-            margin: 0 auto;
-            padding: 0;
-        }
-
-        table,
-        td,
-        th {
-            border: 1px solid #000000;
-            border-collapse: collapse;
-        }
-
-        .nav {
-            background-color: gray;
-            height: 100px;
-        }
-
-        .container {
-            background-color: gold;
-            width: 1000px;
-        }
-
-        .content {
-            background-color: #5666ff;
-            width: 800px;
-            height: 500px;
-            float: left;
-        }
-
-        .sidebar {
-            background-color: lawngreen;
-            width: 200px;
-            height: 500px;
-            float: left;
-        }
-
-        .botmbar {
-            clear: both;
-            background-color: gray;
-            height: 40px;
-        }
+      .navbar-pad {
+        margin-bottom: 20px;
+      }
+      .footbar {
+        margin-top: 50px;
+      }
     </style>
-</head>
-<body>
-<div>
+  </head>
+
+  <body>
     <!-- 导航栏 -->
-    <div class="nav">
-        <a href="/">首页</a>
-        <a href="#">文章列表</a>
-        <a href="/user/register">注册</a>
-    </div>
+    <nav class="navbar navbar-expand-lg navbar-dark bg-dark navbar-pad">
+      <a class="navbar-brand" href="/">
+        <img src="/static/img/logo.png" width="30" />
+        迷你微博
+      </a>
+
+      <div class="collapse navbar-collapse">
+        <ul class="navbar-nav mr-auto">
+          <li class="nav-item active">
+            <a class="nav-link" href="/">首页</a>
+          </li>
+          <li class="nav-item">
+            <a class="nav-link" href="#">关注的人</a>
+          </li>
+
+          <li class="nav-item">
+            <a class="nav-link" href="#">粉丝列表</a>
+          </li>
+        </ul>
+
+        <div>
+          {% if 'uid' in session %}
+          <a class="btn btn-outline-success" href="/weibo/post">发布微博</a>
+          <a class="btn btn-outline-primary" href="/user/info">{{ session.nickname }}</a>
+          <a class="btn btn-outline-warning" href="/user/logout">退出</a>
+          {% else %}
+          <a class="btn btn-outline-primary" href="/user/register">注册</a>
+          <a class="btn btn-outline-success" href="/user/login">登录</a>
+          {% endif %}
+        </div>
+      </div>
+    </nav>
 
     <!-- 容器 -->
     <div class="container">
+      <div class="row">
         <!-- 内容区 -->
-        <div class="content">
-            {% block content %}当前没有内容{% endblock %}
-        </div>
-        <!-- 边栏 -->
-        <div class="sidebar">
-            {% block sidebar %}边栏没有内容{% endblock %}
-        </div>
+        <div class="col-8">{% block content %}{% endblock %}</div>
+
+        <!-- 边栏区 -->
+        <div class="col-4">{% block sidebar %}{% endblock %}</div>
+      </div>
     </div>
 
     <!-- 底栏 -->
-    <div class="botmbar">
-        版权所有@copyright point 2020
+    <div class="container footbar">
+      <div class="text-center text-secondary">Copyright @ point</div>
     </div>
-</div>
-</body>
+
+    <script src="/static/js/jquery-3.5.1.slim.min.js"></script>
+    <script src="/static/js/popper.min.js"></script>
+    <script src="/static/js/bootstrap.min.js"></script>
+  </body>
 </html>
