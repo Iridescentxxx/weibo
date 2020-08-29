@@ -26,15 +26,15 @@
 
       <div class="collapse navbar-collapse">
         <ul class="navbar-nav mr-auto">
-          <li class="nav-item active">
+          <li class="nav-item {% if request.path == '/weibo/index' %}active{% endif %}">
             <a class="nav-link" href="/">首页</a>
           </li>
-          <li class="nav-item">
-            <a class="nav-link" href="#">关注的人</a>
+          <li class="nav-item {% if request.path == '/weibo/follow_weibo' %}active{% endif %}">
+            <a class="nav-link" href="/weibo/follow_weibo">关注的微博</a>
           </li>
 
-          <li class="nav-item">
-            <a class="nav-link" href="#">粉丝列表</a>
+          <li class="nav-item {% if request.path == '/user/fans' %}active{% endif %}">
+            <a class="nav-link" href="/user/fans">粉丝列表</a>
           </li>
         </ul>
 

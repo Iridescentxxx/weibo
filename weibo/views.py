@@ -8,13 +8,13 @@ from flask import session
 from flask import render_template
 from flask import abort
 from sqlalchemy.exc import IntegrityError
-from sqlalchemy.orm.exc import FlushError
 
 from libs.orm import db
 from libs.utils import login_required
 from weibo.models import Weibo
 from weibo.models import Comment
 from weibo.models import Like
+from user.models import Follow
 
 weibo_bp = Blueprint('weibo', __name__, url_prefix='/weibo', template_folder='./templates')
 
@@ -70,7 +70,17 @@ def read_weibo():
 
     # 获取当前微博所有的评论
     comments = Comment.query.filter_by(wid=wid).order_by(Comment.created.desc())
-    return render_template('read.html', weibo=weibo, comments=comments)
+
+    # 判断自己是否收到过赞
+    uid = session.get('uid')
+    if uid:
+        if Like.query.filter_by(uid=uid, wid=wid).count():
+            is_liked = True
+        else:
+            is_liked = False
+    else:
+        is_liked = False
+    return render_template('read.html', weibo=weibo, comments=comments, is_liked=is_liked)
 
 
 @weibo_bp.route('/edit', methods=("POST", "GET"))
@@ -174,17 +184,38 @@ def delete_comment():
 @weibo_bp.route('/like')
 @login_required
 def like():
+    '''点赞'''
     uid = session['uid']
     wid = int(request.args.get('wid'))
 
     lk = Like(uid=uid, wid=wid)
-    db.session.add(lk)
+
     try:
-        Weibo.query.filter_by(id=wid).update({'n_like': Weibo.n_like + 1})
+        # 提交点赞
+        Weibo.query.filter_by(id=wid).update({'n_like': Weibo.n_like + 1})  # 点赞数量加一
+        db.session.add(lk)
         db.session.commit()
-    except (FlushError, IntegrityError):
+    except IntegrityError:
         db.session.rollback()
+        # 取消点赞
+        Weibo.query.filter_by(id=wid).update({'n_like': Weibo.n_like - 1})  # 点赞数量减一
         Like.query.filter_by(uid=uid, wid=wid).delete()
-        Weibo.query.filter_by(id=wid).update({'n_like': Weibo.n_like - 1})
         db.session.commit()
 
+    return redirect(f'/weibo/read?wid={wid}')
+
+
+@weibo_bp.route('/follow_weibo')
+@login_required
+def follow_weibo():
+    '''查看自己关注的人的微博'''
+    uid = session['uid']
+
+    # 找到自己关注的人 uid 列表
+    follows = Follow.query.filter_by(uid=uid).values('fid')
+    fid_list = [fid for (fid,) in follows]
+
+    # 找到这些人最近发布的前 100 条微博
+    wb_list = Weibo.query.filter_by(Weibo.uid.in_(fid_list)).order_by(Weibo.created.desc()).limit(100)
+
+    return render_template('follow_weibo.html', wb_list=wb_list)

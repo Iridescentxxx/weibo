@@ -14,6 +14,7 @@ class Weibo(db.Model):
     content = db.Column(db.Text, nullable=False)
     created = db.Column(db.DateTime, nullable=False)
     updated = db.Column(db.DateTime, nullable=False)
+    n_like = db.Column(db.Integer, nullable=False, default=0)
 
     @property
     def author(self):
@@ -61,6 +62,7 @@ class Comment(db.Model):
             return None
         else:
             return Comment.query.get(self.cid)
+
 
 class Like(db.Model):
     '''点赞表'''

@@ -18,17 +18,23 @@
         <div class="row col justify-content-between">
             <span class="text-secondary">{{ weibo.created }}</span>
 
-            <span>
-      {% if weibo.uid == session.get('uid') %}
-          <!-- 修改删除按钮 -->
-          <a class="text-info" href="/weibo/edit?wid={{ weibo.id }}">修改</a>
-          &nbsp;
-          <a class="text-danger" href="/weibo/delete?wid={{ weibo.id }}">删除</a>
-          &nbsp;
-          <!---->
-      {% endif %}
-                <a href="/like" class="primary">点赞</a>
-    </span>
+        <span>
+            {% if weibo.uid == session.get('uid') %}
+            <!-- 修改删除按钮 -->
+            <a class="text-info" href="/weibo/edit?wid={{ weibo.id }}">修改</a>
+            &nbsp;
+            <a class="text-danger" href="/weibo/delete?wid={{ weibo.id }}">删除</a>
+            &nbsp;
+            {% endif %}
+            <span>{{ weibo.n_like }}</span>
+            <a href="/weibo/like?wid={{ weibo.id }}" class="primary">
+                {% if is_liked %}
+                取消点赞
+                {% else %}
+                点赞
+                {% endif %}
+            </a>
+        </span>
         </div>
     </div>
 
@@ -50,17 +56,16 @@
         <hr/>
         <div class="alert alert-secondary" role="alert">
             <div class="row justify-content-between align-items-center">
-    <span class="col">
-      {% if cmt.cid == 0 %}
-          <!-- 顶级评论作者信息 -->
-          <strong>{{ cmt.author.nickname }}</strong> 说:
+                <span class="col">
+                {% if cmt.cid == 0 %}
+                <!-- 顶级评论作者信息 -->
+                <strong>{{ cmt.author.nickname }}</strong> 说:
 
-          <!-- 回复相关的作者信息 -->
-      {% else %}
-          <strong>{{ cmt.author.nickname }}</strong> 对 <strong>{{ cmt.upper.author.nickname }}</strong> 说:
-          <!---->
-      {% endif %}
-    </span>
+                <!-- 回复相关的作者信息 -->
+                {% else %}
+                <strong>{{ cmt.author.nickname }}</strong> 对 <strong>{{ cmt.upper.author.nickname }}</strong> 说:
+                {% endif %}
+                </span>
 
                 <form class="form-inline text-right" action="/weibo/reply" method="POST">
                     <div class="form-group mx-sm-2">
@@ -79,10 +84,9 @@
 
                 <!-- 判断是否是自己的评论 -->
                 {% if session.uid == cmt.uid %} &nbsp;
-                    <a class="text-danger" href="/weibo/delete_comment?cid={{ cmt.id }}">删除</a>
+                <a class="text-danger" href="/weibo/delete_comment?cid={{ cmt.id }}">删除</a>
                 {% endif %}
             </div>
         </div>
     {% endfor %}
-    <br/>
 {% endblock %}

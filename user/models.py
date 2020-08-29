@@ -18,6 +18,9 @@ class User(db.Model):
     bio = db.Column(db.Text, default='')
     created = db.Column(db.DateTime, nullable=False)  # 用户注册时间
 
+    n_follow = db.Column(db.Integer, nullable=False, default=0)
+    n_fans = db.Column(db.Integer, nullable=False, default=0)
+
     @classmethod
     def fake_users(cls, num):
         users = []

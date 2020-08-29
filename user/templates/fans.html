@@ -1,0 +1,30 @@
+{% extends "base.html" %}
+
+<!-- 填充 content -->
+{% block content %}
+    <h1>粉丝列表</h1>
+    <hr/>
+    <ul class="list-group">
+        {% for u in users %}
+        <li class="list-group-item">
+            <img src="{{ u.avatar }}" width="30px"/>
+            &emsp;
+            <span class="text-primary">
+            <a href="/user/other?uid={{ u.id }}">{{ u.nickname }}</a>
+            </span>
+            &emsp;
+            <span class="text-info">{{ u.city }}</span>
+            &emsp;
+            <span class="text-primary">
+            {% if u.gender == 'male' %}
+                小哥哥
+            {% elif u.gender == 'female' %}
+                小姐姐
+            {% else %}
+                保密
+            {% endif %}
+            </span>
+        </li>
+        {% endfor %}
+    </ul>
+{% endblock %}

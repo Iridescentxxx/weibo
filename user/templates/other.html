@@ -2,7 +2,16 @@
 
 <!-- 填充 content -->
 {% block content %}
-    <h1>{{ user.nickname }} 您好</h1>
+    <div class="row align-items-center">
+        <h2 class="col-sm-3">{{ user.nickname }} 您好</h2>
+        <div class="col">
+            {% if is_followed %}
+                <a class="text-danger" href="/user/follow?fid={{ user.id }}">取消关注</a>
+            {% else %}
+                <a class="text-primary" href="/user/follow?fid={{ user.id }}">关注</a>
+            {% endif %}
+        </div>
+    </div>
 
     <hr/>
 
