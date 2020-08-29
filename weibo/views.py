@@ -216,6 +216,6 @@ def follow_weibo():
     fid_list = [fid for (fid,) in follows]
 
     # 找到这些人最近发布的前 100 条微博
-    wb_list = Weibo.query.filter_by(Weibo.uid.in_(fid_list)).order_by(Weibo.created.desc()).limit(100)
+    wb_list = Weibo.query.filter(Weibo.uid.in_(fid_list)).order_by(Weibo.created.desc()).limit(100)
 
     return render_template('follow_weibo.html', wb_list=wb_list)
